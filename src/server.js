@@ -2,7 +2,6 @@ import express from 'express';
 import cors from 'cors';
 import pino from 'pino-http';
 import { env } from './utils/env.js';
-import { getAllContacts, getContactById } from './services/contacts.js';
 
 const PORT = Number(env('PORT', '3008'));
 
@@ -35,41 +34,6 @@ export const setupServer = () => {
     res.json({
       message: 'Hello world!',
     });
-  });
-
-  app.get('/contacts', async (req, res) => {
-    try {
-      const contacts = await getAllContacts();
-      res.status(200).json({
-        data: contacts,
-        message: 'Successfully found contacts!',
-      });
-    } catch (error) {
-      res.status(500).json({
-        message: 'Error fetching contacts',
-        error: error.message,
-      });
-    }
-  });
-
-  app.get('/contacts/:contactId', async (req, res) => {
-    const { contactId } = req.params;
-    try {
-      const contact = await getContactById(contactId);
-
-      if (!contact) {
-        return res.status(404).json({ message: 'Contact not found' });
-      }
-
-      res.status(200).json({
-        data: contact,
-        message: `Successfully found contact with id ${contactId}!`,
-      });
-    } catch (error) {
-      res
-        .status(500)
-        .json({ message: 'Error fetching contact', error: error.message });
-    }
   });
 
   app.use('*', (req, res, next) => {
