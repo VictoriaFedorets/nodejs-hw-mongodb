@@ -4,7 +4,7 @@ import pino from 'pino-http';
 import { env } from './utils/env.js';
 import { getAllContacts, getContactById } from './services/contacts.js';
 
-const PORT = Number(env('PORT', '3012'));
+const PORT = Number(env('PORT', '3013'));
 
 export const setupServer = () => {
   const app = express();
@@ -41,11 +41,13 @@ export const setupServer = () => {
     try {
       const contacts = await getAllContacts();
       res.status(200).json({
+        status: 200,
         data: contacts,
         message: 'Successfully found contacts!',
       });
     } catch (error) {
       res.status(500).json({
+        status: 500,
         message: 'Error fetching contacts',
         error: error.message,
       });
@@ -58,28 +60,36 @@ export const setupServer = () => {
       const contact = await getContactById(contactId);
 
       if (!contact) {
-        return res.status(404).json({ message: 'Contact not found' });
+        return res.status(404).json({
+          status: 404,
+          message: 'Contact not found',
+        });
       }
 
       res.status(200).json({
+        status: 200,
         data: contact,
         message: `Successfully found contact with id ${contactId}!`,
       });
     } catch (error) {
-      res
-        .status(500)
-        .json({ message: 'Error fetching contact', error: error.message });
+      res.status(500).json({
+        status: 500,
+        message: 'Error fetching contact',
+        error: error.message,
+      });
     }
   });
 
   app.use('*', (req, res, next) => {
     res.status(404).json({
+      status: 404,
       message: 'Not found',
     });
   });
 
   app.use((err, req, res, next) => {
     res.status(500).json({
+      status: 500,
       message: 'Something went wrong',
       error: err.message,
     });
