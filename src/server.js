@@ -1,8 +1,10 @@
 import express from 'express';
 import cors from 'cors';
-import pino from 'pino-http';
 import { env } from './utils/env.js';
-import { getAllContacts, getContactById } from './services/contacts.js';
+import { contactsRouter } from './routers/contacts.js';
+import { notFoundHandler } from '../src/middlewares/notFoundHandler.js';
+import { errorHandler } from '../src/middlewares/errorHandler.js';
+import { logger } from '../src/middlewares/logger.js';
 
 const PORT = Number(env('PORT', '3026'));
 
@@ -17,13 +19,7 @@ export const setupServer = () => {
   app.use(cors());
 
   // Налаштування логгера
-  app.use(
-    pino({
-      transport: {
-        target: 'pino-pretty',
-      },
-    }),
-  );
+  app.use(logger);
 
   // app.use((req, res, next) => {
   //   console.log(`Time: ${new Date().toLocaleString()}`);
@@ -31,69 +27,18 @@ export const setupServer = () => {
   // });
 
   // Обробка неіснуючих роутів
+
   app.get('/', (req, res) => {
     res.json({
       message: 'Hello world!',
     });
   });
 
-  app.get('/contacts', async (req, res) => {
-    try {
-      const contacts = await getAllContacts();
-      res.status(200).json({
-        status: 200,
-        data: contacts,
-        message: 'Successfully found contacts!',
-      });
-    } catch (error) {
-      res.status(500).json({
-        status: 500,
-        message: 'Error fetching contacts',
-        error: error.message,
-      });
-    }
-  });
+  app.use('/contacts', contactsRouter);
 
-  app.get('/contacts/:contactId', async (req, res) => {
-    const { contactId } = req.params;
-    try {
-      const contact = await getContactById(contactId);
+  app.use('*', notFoundHandler);
 
-      if (!contact) {
-        return res.status(404).json({
-          status: 404,
-          message: 'Contact not found',
-        });
-      }
-
-      res.status(200).json({
-        status: 200,
-        data: contact,
-        message: `Successfully found contact with id ${contactId}!`,
-      });
-    } catch (error) {
-      res.status(500).json({
-        status: 500,
-        message: 'Error fetching contact',
-        error: error.message,
-      });
-    }
-  });
-
-  app.use('*', (req, res, next) => {
-    res.status(404).json({
-      status: 404,
-      message: 'Not found',
-    });
-  });
-
-  app.use((err, req, res, next) => {
-    res.status(500).json({
-      status: 500,
-      message: 'Something went wrong',
-      error: err.message,
-    });
-  });
+  app.use(errorHandler);
 
   app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
