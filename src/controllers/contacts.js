@@ -1,10 +1,11 @@
-import { getAllContacts, getContactById } from '../services/contacts.js';
-import createHttpError from 'http-errors';
 import {
+  getAllContacts,
+  getContactById,
   createContact,
   deleteContact,
   updateContact,
 } from '../services/contacts.js';
+import createHttpError from 'http-errors';
 
 export const getContactsController = async (req, res) => {
   const contacts = await getAllContacts();
@@ -39,14 +40,27 @@ export const getContactByIdController = async (req, res) => {
   });
 };
 
-export const createContactController = async (req, res) => {
-  const contact = await createContact(req.body);
+export const createContactController = async (req, res, next) => {
+  const { name, phoneNumber, contactType } = req.body;
 
-  res.status(201).json({
-    status: 201,
-    message: `Successfully created a contact!`,
-    data: contact,
-  });
+  // Перевірка на обов'язкові поля
+  if (!name || !phoneNumber || !contactType) {
+    return next(
+      createHttpError(400, 'Name, phone number, and contact type are required'),
+    );
+  }
+
+  try {
+    const contact = await createContact(req.body);
+
+    res.status(201).json({
+      status: 201,
+      message: `Successfully created a contact!`,
+      data: contact,
+    });
+  } catch (error) {
+    next(error);
+  }
 };
 
 export const deleteContactController = async (req, res, next) => {

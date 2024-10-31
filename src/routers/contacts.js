@@ -7,7 +7,7 @@ import {
   upsertContactController,
   patchContactController,
 } from '../controllers/contacts.js';
-import { ctrlWrapper } from '../utils/ctrlWrapper.js';
+import ctrlWrapper from '../utils/ctrlWrapper.js';
 
 const contactsRouter = Router();
 

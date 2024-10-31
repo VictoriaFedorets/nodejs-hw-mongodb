@@ -1,12 +1,12 @@
 import express from 'express';
 import cors from 'cors';
 import { env } from './utils/env.js';
-import { contactsRouter } from './routers/contacts.js';
+import contactsRouter from './routers/contacts.js';
 import { notFoundHandler } from '../src/middlewares/notFoundHandler.js';
 import { errorHandler } from '../src/middlewares/errorHandler.js';
 import { logger } from '../src/middlewares/logger.js';
 
-const PORT = Number(env('PORT', '3026'));
+const PORT = Number(env('PORT', '3028'));
 
 export const setupServer = () => {
   const app = express();
