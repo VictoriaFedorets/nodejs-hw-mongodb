@@ -41,7 +41,7 @@ export const getContactByIdController = async (req, res) => {
 };
 
 export const createContactController = async (req, res, next) => {
-  const { name, phoneNumber, contactType } = req.body;
+  const { name, phoneNumber, email, isFavourite, contactType } = req.body;
 
   // Перевірка на обов'язкові поля
   if (!name || !phoneNumber || !contactType) {
@@ -51,12 +51,19 @@ export const createContactController = async (req, res, next) => {
   }
 
   try {
-    const contact = await createContact(req.body);
+    const contactData = {
+      name,
+      phoneNumber,
+      email,
+      isFavourite,
+      contactType,
+    };
+    const сontact = await createContact(contactData);
 
     res.status(201).json({
       status: 201,
       message: `Successfully created a contact!`,
-      data: contact,
+      data: сontact,
     });
   } catch (error) {
     next(error);

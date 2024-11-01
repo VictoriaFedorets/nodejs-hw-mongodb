@@ -15,21 +15,12 @@ contactsRouter.get('/', ctrlWrapper(getContactsController));
 
 contactsRouter.get('/:contactId', ctrlWrapper(getContactByIdController));
 
-contactsRouter.post('/contacts', ctrlWrapper(createContactController));
+contactsRouter.post('/', ctrlWrapper(createContactController));
 
-contactsRouter.delete(
-  '/contacts/:contactId',
-  ctrlWrapper(deleteContactController),
-);
+contactsRouter.delete('/:contactId', ctrlWrapper(deleteContactController));
 
-contactsRouter.put(
-  '/contacts/:contactId',
-  ctrlWrapper(upsertContactController),
-);
+contactsRouter.put('/:contactId', ctrlWrapper(upsertContactController));
 
-contactsRouter.patch(
-  '/contacts/:contactId',
-  ctrlWrapper(patchContactController),
-);
+contactsRouter.patch('/:contactId', ctrlWrapper(patchContactController));
 
 export default contactsRouter;
