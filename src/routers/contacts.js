@@ -15,20 +15,20 @@ contactsRouter.get('/', ctrlWrapper(getContactsController));
 
 contactsRouter.get('/:contactId', ctrlWrapper(getContactByIdController));
 
-contactsRouter.post('/students', ctrlWrapper(createContactController));
+contactsRouter.post('/contacts', ctrlWrapper(createContactController));
 
 contactsRouter.delete(
-  '/students/:studentId',
+  '/contacts/:contactId',
   ctrlWrapper(deleteContactController),
 );
 
 contactsRouter.put(
-  '/students/:studentId',
+  '/contacts/:contactId',
   ctrlWrapper(upsertContactController),
 );
 
 contactsRouter.patch(
-  '/students/:studentId',
+  '/contacts/:contactId',
   ctrlWrapper(patchContactController),
 );
 
