@@ -6,7 +6,7 @@ import { notFoundHandler } from '../src/middlewares/notFoundHandler.js';
 import { errorHandler } from '../src/middlewares/errorHandler.js';
 import { logger } from '../src/middlewares/logger.js';
 
-const PORT = Number(env('PORT', '3029'));
+const PORT = Number(env('PORT', '3031'));
 
 export const setupServer = () => {
   const app = express();
