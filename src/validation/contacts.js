@@ -7,7 +7,7 @@ export const createContactSchema = Joi.object({
     'string.max': 'Username should have at most {#limit} characters',
     'any.required': 'Username is required',
   }),
-  phoneNumber: Joi.string().phoneNumber().min(3).max(20).required().messages({
+  phoneNumber: Joi.string().min(3).max(20).required().messages({
     'string.base': 'Phone number should be a string',
     'string.min': 'Phone number should have at least {#limit} characters',
     'string.max': 'Phone number should have at most {#limit} characters',
@@ -19,7 +19,7 @@ export const createContactSchema = Joi.object({
     'string.max': 'Email should have at most {#limit} characters',
   }),
   isFavourite: Joi.boolean().messages({
-    'string.base': 'Is favourite should be a boolean',
+    'boolean.base': 'Is favourite should be a boolean',
   }),
   contactType: Joi.string()
     .valid('work', 'home', 'personal')
@@ -42,7 +42,7 @@ export const updateContactSchema = Joi.object({
     'string.min': 'Username should have at least {#limit} characters',
     'string.max': 'Username should have at most {#limit} characters',
   }),
-  phoneNumber: Joi.string().phoneNumber().min(3).max(20).messages({
+  phoneNumber: Joi.string().min(3).max(20).messages({
     'string.base': 'Phone number should be a string',
     'string.min': 'Phone number should have at least {#limit} characters',
     'string.max': 'Phone number should have at most {#limit} characters',
@@ -53,7 +53,7 @@ export const updateContactSchema = Joi.object({
     'string.max': 'Email should have at most {#limit} characters',
   }),
   isFavourite: Joi.boolean().messages({
-    'string.base': 'Is favourite should be a boolean',
+    'boolean.base': 'Is favourite should be a boolean',
   }),
   contactType: Joi.string()
     .valid('work', 'home', 'personal')
