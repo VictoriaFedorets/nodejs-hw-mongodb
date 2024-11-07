@@ -17,10 +17,10 @@ export const getAllContacts = async ({
 
   // console.log('Fetched contacts:', contactsQuery);
 
-  if (filter.contactType) {
+  if (filter.contactType !== undefined) {
     contactsQuery.where('contactType').equals(filter.contactType);
   }
-  if (filter.isFavourite !== 'undefined') {
+  if (filter.isFavourite !== undefined) {
     contactsQuery.where('isFavourite').equals(filter.isFavourite);
   }
 

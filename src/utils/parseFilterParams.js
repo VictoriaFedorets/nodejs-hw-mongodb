@@ -3,7 +3,6 @@ const parseIsFavourite = (boolean) => {
 
   if (boolean === 'true') return true;
   if (boolean === 'false') return false;
-
   return undefined;
 };
 
@@ -18,7 +17,7 @@ export const parseFilterParams = (query) => {
   const { contactType, isFavourite } = query;
 
   return {
-    type: parseContactType(contactType),
+    contactType: parseContactType(contactType),
     isFavourite: parseIsFavourite(isFavourite),
   };
 };
