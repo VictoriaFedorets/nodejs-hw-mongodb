@@ -1,7 +1,9 @@
 import express from 'express';
 import cors from 'cors';
+import cookieParser from 'cookie-parser';
+
 import { env } from './utils/env.js';
-import contactsRouter from './routers/contacts.js';
+import router from './routers/index.js';
 import { notFoundHandler } from '../src/middlewares/notFoundHandler.js';
 import { errorHandler } from '../src/middlewares/errorHandler.js';
 import { logger } from '../src/middlewares/logger.js';
@@ -18,15 +20,11 @@ export const setupServer = () => {
   // Налаштування CORS
   app.use(cors());
 
+  // Для роботи із куками
+  app.use(cookieParser());
+
   // Налаштування логгера
   app.use(logger);
-
-  // app.use((req, res, next) => {
-  //   console.log(`Time: ${new Date().toLocaleString()}`);
-  //   next();
-  // });
-
-  // Обробка неіснуючих роутів
 
   app.get('/', (req, res) => {
     res.json({
@@ -34,7 +32,7 @@ export const setupServer = () => {
     });
   });
 
-  app.use('/contacts', contactsRouter);
+  app.use(router);
 
   app.use('*', notFoundHandler);
 
