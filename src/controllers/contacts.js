@@ -23,6 +23,7 @@ export const getContactsController = async (req, res, next) => {
     sortBy,
     sortOrder,
     filter,
+    userId: req.user._id,
   });
 
   res.status(200).json({
@@ -34,19 +35,11 @@ export const getContactsController = async (req, res, next) => {
 
 export const getContactByIdController = async (req, res) => {
   const { contactId } = req.params;
-  const contact = await getContactById(contactId);
+
+  const contact = await getContactById(contactId, req.user._id);
 
   if (!contact) {
     throw createHttpError(404, 'Contact not found');
-
-    //   const error = new Error('Contact not found');
-    //   error.status = 404;
-    //     throw error;
-
-    //   return res.status(404).json({
-    //     status: 404,
-    //     message: 'Contact not found',
-    //   });
   }
 
   res.status(200).json({
@@ -58,6 +51,7 @@ export const getContactByIdController = async (req, res) => {
 
 export const createContactController = async (req, res, next) => {
   const { name, phoneNumber, email, isFavourite, contactType } = req.body;
+  const userId = req.user.id;
 
   // Перевірка на обов'язкові поля
   if (!name || !phoneNumber || !contactType) {
@@ -73,13 +67,14 @@ export const createContactController = async (req, res, next) => {
       email,
       isFavourite,
       contactType,
+      userId,
     };
-    const сontact = await createContact(contactData);
+    const newContact = await createContact(contactData);
 
     res.status(201).json({
       status: 201,
       message: `Successfully created a contact!`,
-      data: сontact,
+      data: newContact,
     });
   } catch (error) {
     next(error);
@@ -88,7 +83,7 @@ export const createContactController = async (req, res, next) => {
 
 export const deleteContactController = async (req, res, next) => {
   const { contactId } = req.params;
-  const contact = await deleteContact(contactId);
+  const contact = await deleteContact(contactId, req.user._id);
 
   if (!contact) {
     next(createHttpError(404, 'Contact not found'));
