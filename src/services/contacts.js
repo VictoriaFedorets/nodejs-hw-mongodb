@@ -2,6 +2,7 @@
 import { contacts } from '../db/models/contacts.js';
 import { calculatePaginationData } from '../utils/calculatePaginationData.js';
 import { SORT_ORDER } from '../constants/index.js';
+import mongoose from 'mongoose';
 
 export const getAllContacts = async ({
   page = 1,
@@ -14,7 +15,9 @@ export const getAllContacts = async ({
   const limit = perPage;
   const skip = (page - 1) * perPage;
 
-  const contactsQuery = contacts.find({ userId });
+  const contactsQuery = contacts.find({
+    userId: filter.userId,
+  });
 
   // console.log('Fetched contacts:', contactsQuery);
 
@@ -27,10 +30,7 @@ export const getAllContacts = async ({
 
   // const contactsCount = await contactsQuery.clone().countDocuments();
 
-  const contactsCount = await contacts
-    .find({ userId })
-    .merge(contactsQuery)
-    .countDocuments();
+  const contactsCount = await contacts.countDocuments();
 
   const contactsData = await contactsQuery
     .skip(skip)

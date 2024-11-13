@@ -13,7 +13,7 @@ import { parseFilterParams } from '../utils/parseFilterParams.js';
 export const getContactsController = async (req, res, next) => {
   const { page, perPage } = parsePaginationParams(req.query);
   const { sortBy, sortOrder } = parseSortParams(req.query);
-  const filter = parseFilterParams(req.query);
+  const filter = { ...parseFilterParams(req.query), userId: req.user._id };
 
   // console.log('Parsed filter params:', filter);
 
@@ -52,6 +52,7 @@ export const getContactByIdController = async (req, res) => {
 export const createContactController = async (req, res, next) => {
   const { name, phoneNumber, email, isFavourite, contactType } = req.body;
   const userId = req.user.id;
+  // console.log('User ID:', userId);
 
   // Перевірка на обов'язкові поля
   if (!name || !phoneNumber || !contactType) {

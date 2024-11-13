@@ -8,7 +8,14 @@ import { SessionsCollection } from '../db/models/session.js';
 
 export const registerUser = async (payload) => {
   const user = await UsersCollection.findOne({ email: payload.email });
-  if (user) throw createHttpError(409, 'Email in use');
+  if (user)
+    throw createHttpError(409, {
+      status: 409,
+      message: 'ConflictError',
+      data: {
+        message: 'Email in use',
+      },
+    });
 
   // хешування пароля
   // рівень складності та безпеки
