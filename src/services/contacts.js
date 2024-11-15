@@ -2,7 +2,6 @@
 import { contacts } from '../db/models/contacts.js';
 import { calculatePaginationData } from '../utils/calculatePaginationData.js';
 import { SORT_ORDER } from '../constants/index.js';
-import mongoose from 'mongoose';
 
 export const getAllContacts = async ({
   page = 1,
@@ -10,10 +9,11 @@ export const getAllContacts = async ({
   sortOrder = SORT_ORDER.ASC,
   sortBy = '_id',
   filter = {},
-  userId,
 }) => {
   const limit = perPage;
   const skip = (page - 1) * perPage;
+
+  // const userObjectId = mongoose.Types.ObjectId(userId);
 
   const contactsQuery = contacts.find({
     userId: filter.userId,
@@ -28,9 +28,13 @@ export const getAllContacts = async ({
     contactsQuery.where('isFavourite').equals(filter.isFavourite);
   }
 
+  // для врахування всіх фільтрів додаємо .clone()
   // const contactsCount = await contactsQuery.clone().countDocuments();
 
-  const contactsCount = await contacts.countDocuments();
+  const contactsCount = await contacts
+    .find()
+    .merge(contactsQuery)
+    .countDocuments();
 
   const contactsData = await contactsQuery
     .skip(skip)
@@ -47,8 +51,10 @@ export const getAllContacts = async ({
 };
 
 export const getContactById = async (contactId, userId) => {
-  const contact = await contacts.findById({ _id: contactId, userId });
-  return contact;
+  return await contacts.findOne({
+    _id: contactId,
+    userId: userId,
+  });
 };
 
 export const createContact = async (payload) => {
@@ -72,17 +78,19 @@ export const updateContact = async (
   options = {},
 ) => {
   const rawResult = await contacts.findOneAndUpdate(
-    { _id: contactId, userId },
+    {
+      _id: contactId,
+      userId: userId,
+    },
     payload,
     {
+      ...options,
       new: true,
       includeResultMetadata: true,
-      ...options,
     },
   );
 
   if (!rawResult || !rawResult.value) return null;
-
   return {
     contact: rawResult.value,
     isNew: Boolean(rawResult?.lastErrorObject?.upserted),

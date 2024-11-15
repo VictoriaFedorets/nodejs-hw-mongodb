@@ -1,3 +1,5 @@
+import createHttpError from 'http-errors';
+
 import {
   getAllContacts,
   getContactById,
@@ -5,12 +7,11 @@ import {
   deleteContact,
   updateContact,
 } from '../services/contacts.js';
-import createHttpError from 'http-errors';
 import { parsePaginationParams } from '../utils/parsePaginationParams.js';
 import { parseSortParams } from '../utils/parseSortParams.js';
 import { parseFilterParams } from '../utils/parseFilterParams.js';
 
-export const getContactsController = async (req, res, next) => {
+export const getContactsController = async (req, res) => {
   const { page, perPage } = parsePaginationParams(req.query);
   const { sortBy, sortOrder } = parseSortParams(req.query);
   const filter = { ...parseFilterParams(req.query), userId: req.user._id };
@@ -116,13 +117,17 @@ export const upsertContactController = async (req, res, next) => {
 
 export const patchContactController = async (req, res, next) => {
   const { contactId } = req.params;
-  const result = await updateContact(contactId, req.body, {
+
+  if (!contactId) {
+    return next(createHttpError(400, 'Contact ID is required'));
+  }
+
+  const result = await updateContact(contactId, req.body, req.user._id, {
     upsert: true,
   });
 
   if (!result) {
-    next(createHttpError(404, 'Contact not found'));
-    return;
+    return next(createHttpError(404, 'Contact not found'));
   }
 
   res.json({

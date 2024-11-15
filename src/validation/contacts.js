@@ -30,10 +30,6 @@ export const createContactSchema = Joi.object({
       'any.only':
         'Contact type must be one of the following: work, home, personal',
     }),
-  // parentId: Joi.string().required().message({
-  //   'string.base': 'ParentId should be a string',
-  //   'any.required': 'ParentId type is required',
-  // }),
 });
 
 export const updateContactSchema = Joi.object({
