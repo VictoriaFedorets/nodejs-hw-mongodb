@@ -58,12 +58,23 @@ export const createContactController = async (req, res, next) => {
   const { name, phoneNumber, email, isFavourite, contactType } = req.body;
   const userId = req.user.id;
   // console.log('User ID:', userId);
+  const photo = req.file;
 
   // Перевірка на обов'язкові поля
   if (!name || !phoneNumber || !contactType) {
     return next(
       createHttpError(400, 'Name, phone number, and contact type are required'),
     );
+  }
+
+  let photoUrl;
+
+  if (photo) {
+    if (env('ENABLE_CLOUDINARY') === 'true') {
+      photoUrl = await saveFileToCloudinary(photo);
+    } else {
+      photoUrl = await saveFileToUploadDir(photo);
+    }
   }
 
   try {
@@ -74,6 +85,7 @@ export const createContactController = async (req, res, next) => {
       isFavourite,
       contactType,
       userId,
+      photo: photoUrl,
     };
     const newContact = await createContact(contactData);
 
