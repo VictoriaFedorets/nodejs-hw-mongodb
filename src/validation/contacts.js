@@ -51,6 +51,7 @@ export const updateContactSchema = Joi.object({
   isFavourite: Joi.boolean().messages({
     'boolean.base': 'Is favourite should be a boolean',
   }),
+  photo: Joi.string(),
   contactType: Joi.string().valid('work', 'home', 'personal').messages({
     'string.base': 'Contact type should be a string',
     'any.only':
