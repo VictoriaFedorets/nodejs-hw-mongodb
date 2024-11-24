@@ -11,7 +11,10 @@
   },
   "servers": [
     {
-      "url": "https://contacts-book-app.com/api/v1"
+      "url": "http://localhost:3031"
+    },
+    {
+      "url": "https://contacts-book-app.onrender.com/api/v1"
     }
   ],
   "tags": [
