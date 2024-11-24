@@ -14,23 +14,6 @@ parameters:
       type: string
       example: '65ca67e7ae7f10c88b598384'
 responses:
-  '200':
-    description: 'Contact deleted successfully'
-    content:
-      application/json:
-        schema:
-          type: object
-          required:
-            - status
-            - message
-            - data
-          properties:
-            status:
-              type: integer
-              example: 200
-            message:
-              type: string
-              example: Successfully deleted contact with id 65ca67e7ae7f10c88b598384!
   '204':
     description: Successfully deleted the contact. No content in the response.
   '401':

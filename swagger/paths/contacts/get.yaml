@@ -24,7 +24,7 @@ parameters:
     name: sortBy
     schema:
       type: string
-      example: 'name'
+      example: '_id'
     description: "All contact's fields can be mentioned. Default value - _id"
   - in: query
     name: sortOrder
@@ -33,24 +33,6 @@ parameters:
       enum: ['asc', 'desc']
       description: 'Sort order: asc - ascending, desc - descending.'
       example: 'asc'
-  - in: query
-    name: name
-    schema:
-      type: string
-    description: 'Filter by contact name.'
-    example: 'Victoria'
-  - in: query
-    name: phoneNumber
-    schema:
-      type: string
-      description: 'Filter by phone number.'
-      example: '380996676767'
-  - in: query
-    name: email
-    schema:
-      type: string
-      description: 'Filter by phone email.'
-      example: 'vika@gmail.com'
   - in: query
     name: isFavourite
     schema:
