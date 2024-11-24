@@ -11,10 +11,8 @@
   },
   "servers": [
     {
-      "url": "http://localhost:3031"
-    },
-    {
-      "url": "https://contacts-book-app.onrender.com/api/v1"
+      "url": "https://contacts-book-app.onrender.com/api/v1",
+      "description": "Production API"
     }
   ],
   "tags": [
